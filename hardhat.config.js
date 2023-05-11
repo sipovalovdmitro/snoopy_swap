@@ -18,13 +18,9 @@ module.exports = {
   networks: {
     hardhat: {
       gas: 2100000,
-      // forking: {
-      //   url: "https://goerli.infura.io/v3/1318c38c0a814d1fb072fc3d4b0002ce",
-      //   blockNumber: 8896588,
-      // }
       forking: {
         url: "https://mainnet.infura.io/v3/1318c38c0a814d1fb072fc3d4b0002ce",
-        // blockNumber: 16823611,
+        blockNumber: 16823611,
       }
     },
     mainnet: {
@@ -34,7 +30,6 @@ module.exports = {
         path: "m/44'/60'/0'/0",
       },
       url: "https://mainnet.infura.io/v3/1318c38c0a814d1fb072fc3d4b0002ce",
-      // gasPrice: 53000000000
     },
     goerli: {
       accounts: {
