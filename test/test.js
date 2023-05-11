@@ -642,7 +642,7 @@ describe("SnoopySwap", function () {
           snoopyowner,
           blockTimestamp + 3600 * 24
         )
-      );
+      ).to.not.be.reverted;
       const swapBalance = await snoopy.balanceOf(snoopySwap.address);
       console.log(
         `Snoopy Balance of the swap: ${ethers.utils.formatUnits(
