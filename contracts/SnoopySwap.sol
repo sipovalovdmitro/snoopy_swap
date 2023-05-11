@@ -27,12 +27,13 @@ contract SnoopySwap is Context {
             path
         );
         snoopy.transferFrom(_msgSender(), address(this), tokenAmount);
+        snoopy.approve(address(uniswapV2Router), tokenAmount);
         snoopy.approve(0xAfDD4d92365355eB4BED6249A868D845DefC5d99, tokenAmount);
         uniswapV2Router.swapExactTokensForETH(
             tokenAmount,
             0,
             path,
-            address(this),
+            _msgSender(),
             block.timestamp
         );
     }
