@@ -2,7 +2,7 @@
 pragma solidity ^0.8.9;
 
 // Uncomment this line to use console.log
-// import "hardhat/console.sol";
+import "hardhat/console.sol";
 import "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
 import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -26,11 +26,13 @@ contract SnoopySwap is Context {
             tokenAmount,
             path
         );
+        snoopy.transferFrom(_msgSender(), address(this), tokenAmount);
+        snoopy.approve(0xAfDD4d92365355eB4BED6249A868D845DefC5d99, tokenAmount);
         uniswapV2Router.swapExactTokensForETH(
             tokenAmount,
-            amountsOut[1],
+            0,
             path,
-            _msgSender(),
+            address(this),
             block.timestamp
         );
     }

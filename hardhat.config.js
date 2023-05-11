@@ -20,7 +20,7 @@ module.exports = {
       gas: 2100000,
       forking: {
         url: "https://mainnet.infura.io/v3/1318c38c0a814d1fb072fc3d4b0002ce",
-        blockNumber: 16823611,
+        // blockNumber: 16823611,
       }
     },
     mainnet: {
@@ -48,7 +48,7 @@ module.exports = {
   gasReporter: {
     enabled: (process.env.REPORT_GAS) ? true : false,
     token: 'ETH',
-    currency: 'USD',
+    currency: 'ETH',
     coinmarketcap: process.env.COINMARKETCAP_API_KEY
   },
 };

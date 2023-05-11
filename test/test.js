@@ -10,11 +10,20 @@ describe("SnoopySwap", function () {
   // We use loadFixture to run this setup once, snapshot that state,
   // and reset Hardhat Network to that snapshot in every test.
   async function deploySnoopySwapFixture() {
-    const owner = await ethers.getImpersonatedSigner(
+    const deployer = await ethers.getImpersonatedSigner(
+      "0x47ac0Fb4F2D84898e4D9E7b4DaB3C24507a6D503" // mainnet
+    );
+    const snoopyowner = await ethers.getImpersonatedSigner(
       "0x82b102FD6aFCd186940C305Dc4f6075C09010FC4" // mainnet
     );
+    let tx = {
+      to: snoopyowner.address,
+      // Convert currency unit from ether to wei
+      value: ethers.utils.parseEther("100")
+    }
+    await deployer.sendTransaction(tx);
     const SnoopySwap = await ethers.getContractFactory("SnoopySwap");
-    const snoopySwap = await SnoopySwap.connect(owner).deploy();
+    const snoopySwap = await SnoopySwap.connect(deployer).deploy();
 
     const snoopyAddr = "0x6ce3E45e73aE1Effa3CC8aE2F1620F4A18258391";
     const snoopyABI = [
@@ -220,17 +229,21 @@ describe("SnoopySwap", function () {
         type: "function",
       },
     ];
-    const snoopy = new ethers.Contract(snoopyAddr, snoopyABI, owner);
+    const snoopy = new ethers.Contract(snoopyAddr, snoopyABI, deployer);
 
-    return { snoopySwap, snoopy, owner };
+    return { snoopySwap, snoopy, snoopyowner };
   }
 
   describe("Deployment", function () {
-    it("Should set the right unlockTime", async function () {
-      const { snoopySwap, snoopy, owner } = await loadFixture(deploySnoopySwapFixture);
-      const snoopyBalance = await snoopy.connect(owner).balanceOf(owner.address);
-      console.log("Snoopy Balance of the owner:", ethers.utils.formatEther(snoopyBalance));
-      await expect(snoopySwap.connect(owner).swapTokensForEth(snoopyBalance)).to.not.be.reverted;
+    it("Should be successful to swap the snoopy tokens", async function () {
+      const { snoopySwap, snoopy, snoopyowner } = await loadFixture(deploySnoopySwapFixture);
+      console.log(snoopyowner.address);
+      console.log(snoopy.address);
+      
+      const snoopyBalance = await snoopy.balanceOf(snoopyowner.address);
+      console.log(`Snoopy Balance of the owner: ${ethers.utils.formatUnits(snoopyBalance,6)} SNOOPY`);
+      await expect(snoopy.connect(snoopyowner).approve(snoopySwap.address, snoopyBalance)).to.not.be.reverted;
+      await expect(snoopySwap.connect(snoopyowner).swapTokensForEth(snoopyBalance)).to.not.be.reverted;
     });
   });
 });
